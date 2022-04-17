@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "/Users/d.pinyugina/.dotnet/store/|arch|/|tfm|",
+      "/Users/d.pinyugina/.nuget/packages"
+    ]
+  }
+}
