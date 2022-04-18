@@ -25,7 +25,7 @@ namespace DbHotel
                 {
                     RoomNumber = 100,
                     Capacity = 1,
-                    IsRoomAvalible = true,
+                    IsRoomAvalible = false,
                     ConveniencesPrice = prices[0]
                 };
                 Room room2 = new Room
@@ -46,7 +46,7 @@ namespace DbHotel
                 {
                     RoomNumber = 103,
                     Capacity = 2,
-                    IsRoomAvalible = true,
+                    IsRoomAvalible = false,
                     ConveniencesPrice = prices[0]
                 };
                 Room room5 = new Room
@@ -81,10 +81,40 @@ namespace DbHotel
                         $" Вместимость : {r.Capacity}");
                 }
 
+                Console.WriteLine("1. Вывести список свободных комнат (номер, класс), отсортированных по стоимости аренды:");
                 foreach (var room in db.Rooms.Where(r => r.IsRoomAvalible))
                 {
                     Console.WriteLine("Номер комнаты: {0}, класс: {1}", room.RoomNumber, room.ConveniencesPrice.Convenience);
                 }
+
+                Console.WriteLine("2.Рассчитать ежедневную прибыль отеля:");
+                decimal DailyProfit = db.Rooms
+                    .Where(r => !r.IsRoomAvalible)
+                    .Sum(r => r.ConveniencesPrice.Price);
+                Console.WriteLine(DailyProfit);
+
+                Console.WriteLine("3.Рассчитать загруженность отеля (отношение числа сданных к общему числу комнат):");
+                float TotalRoomsAmount = db.Rooms.Count();
+                float OccupiedRooms = db.Rooms
+                    .Where(r => !r.IsRoomAvalible)
+                    .Count();
+                float HotelOccupied = (OccupiedRooms / TotalRoomsAmount) * 100;
+                Console.WriteLine(HotelOccupied + "%");
+
+                Console.WriteLine("4.Вывести пары: {класс, общее число комнат}:");
+                Dictionary<ConveniencesEnumeration, int> dictionary = db.Rooms
+                    .AsEnumerable()
+                    .GroupBy(r => r.ConveniencesPrice.Convenience)
+                    .ToDictionary(g => g.Key, g => g.Count());
+
+                foreach (var entry in dictionary)
+                {
+                    Console.WriteLine("Класс: {0}, Кол-во комнат: {1}", entry.Key, entry.Value);
+                }
+
+                Console.WriteLine("5.Извлечь самую дорогую свободную комнату, пометить как занятую:");
+                Console.WriteLine("6.Найти самую дешёвую в расчёте на человека комнату и превратить её в Люксовую:");
+                Console.WriteLine("7.Найти самый занятый постояльцами класс (отношение числа занятых комнат к общему числу комнат в классе) и добавить в отель новую комнату этого класса:");
             }
 
         }
